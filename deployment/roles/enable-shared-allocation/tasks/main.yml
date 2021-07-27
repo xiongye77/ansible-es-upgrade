@@ -1,0 +1,15 @@
+---
+
+- name: Enable shared allocation
+  uri:
+    url: http://localhost:9200/_cluster/settings?format=json
+    method: PUT
+    body: '{ "persistent": { "cluster.routing.allocation.enable": null } }'
+    status_code: 200
+    body_format: json
+    return_content: yes
+  register: result
+- name: Fail the shared allocation
+  fail: msg="Shared allocation failed"
+  when: result.json.acknowledged != true
+

@@ -1,0 +1,8 @@
+---
+
+# Need to check the verification steps
+- name: Perform the synced flush
+  uri:
+    url: http://localhost:9200/_flush/synced?pretty
+    method: POST
+    status_code: 200

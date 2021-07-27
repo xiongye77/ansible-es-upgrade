@@ -1,0 +1,12 @@
+---
+
+- name: Check health status and wait until it becomes green
+  uri:
+    url: http://localhost:9200/_cat/health?format=json
+    method: GET
+    status_code: 200
+    return_content: yes
+  register: result
+  until: result.json[0].status == "green"
+  retries: 10
+  delay: 30

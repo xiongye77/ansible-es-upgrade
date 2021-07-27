@@ -1,0 +1,6 @@
+- name: Change elastic search ownership
+  file:
+    path: /etc/elasticsearch/
+    state: directory
+    owner: elasticsearch
+    group: elasticsearch

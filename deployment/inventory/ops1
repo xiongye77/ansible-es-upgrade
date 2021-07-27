@@ -1,0 +1,3 @@
+[elasticsearch-nodes]
+elasticsearch-node-2.lhr.acx elasticsearch_node_name='elasticsearch-node-2'
+

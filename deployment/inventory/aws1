@@ -1,0 +1,5 @@
+[elasticsearch-nodes]
+elasticsearch-node-1.aws1-a.acx elasticsearch_node_name='elasticsearch-node-1'
+elasticsearch-node-3.aws1-a.acx elasticsearch_node_name='elasticsearch-node-3'
+elasticsearch-node-2.aws1-a.acx elasticsearch_node_name='elasticsearch-node-2'
+

@@ -1,0 +1,135 @@
+ES Rolling Upgrade from 6.8.11 to 7.9.2
+
+We must upgrade from data node firstly one by one , after upgrade all data nodes, upgrade master nodes one by one.
+
+after each node upgrade , must verify the command output 
+
+$ curl -X GET "localhost:9200/_cat/recovery?pretty"
+task         0 230ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+task         1 281ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+task         2 236ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+task         3 143ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+task         4 403ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+organization 0 96ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+organization 1 92ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+organization 2 346ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+organization 3 152ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+organization 4 130ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+project      0 98ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+project      1 134ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+project      2 96ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+project      3 93ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+project      4 128ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+user         0 109ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+user         1 118ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+user         2 174ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+user         3 87ms  peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+user         4 166ms peer done 10.0.18.8 app6.qa104.acx 10.0.18.239 app5.qa104.acx n/a n/a 0 0 0.0% 0 0 0 0.0% 0 0 0 100.0%
+
+yexiong@app6.qa104.acx:/home/yexiong [UNKNOWN]
+$ curl -X GET "localhost:9200/_cat/health?v&pretty"
+epoch      timestamp cluster  status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent
+1622616159 06:42:39  qa104-es green          5         2     40  20    0    0       0             0                  -                 100.0%
+
+yexiong@app6.qa104.acx:/home/yexiong [UNKNOWN]
+$ curl -X GET "localhost:9200/_cat/nodes?pretty"
+10.0.18.73  33 96 0 0.00 0.00 0.00 lm  - app4.qa104.acx
+10.0.18.8   18 93 1 0.04 0.06 0.02 dlt - app6.qa104.acx
+10.0.16.103 24 52 0 0.01 0.02 0.00 lm  * app2.qa104.acx
+10.0.18.239 49 96 2 0.00 0.02 0.00 d   - app5.qa104.acx
+10.0.16.33  11 98 2 0.07 0.02 0.00 m   - app1.qa104.acx
+
+
+example command as   ansible-playbook upgrade-elastic-search.yml -i inventory/qa104
+
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/rolling-upgrades.html
+Prerequisite:
+
+Create a file 'elasticsearch.repo' in the '/etc/yum.repos.d/' and add the following content to setup ES 7.9 repo:
+[elasticsearch]
+name=Elasticsearch repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+
+Step 1
+
+Disable shard allocation
+curl -X PUT "localhost:9200/_cluster/settings?pretty" -H 'Content-Type: application/json' -d '{
+    "persistent": {
+        "cluster.routing.allocation.enable": "primaries"
+    }
+}'
+Step 2
+
+Stop non-essential indexing and perform a synced flush
+curl -X POST "localhost:9200/_flush/synced?pretty"
+Step 3
+
+Stop the elasticsearch service
+sudo service elasticsearch stop
+Step 4
+
+Upgrade the elasticsearch to 7.9.2
+sudo yum upgrade elasticsearch
+Step 5
+
+Upgrade the elasticsearch plugin if any plugin is installed:
+export ES_PATH_CONF=/etc/elasticsearch
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin list
+ 
+##The below warning will be displayed, we can ignore it
+- future versions of Elasticsearch will require Java 11; your Java version from [/usr/java/jdk1.8.0_261-amd64/jre] does not meet this requirement
+## https://www.elastic.co/support/matrix#matrix_jvm - ES 7.9 has support for Java 1.8
+ 
+## Continue the below steps to reinstall the plugins only if the above command returns the plugins
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin remove [pluginname]
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install [pluginname]
+Step 6
+
+Change the owner of elasticsearch folder to elasticsearch
+sudo chown -R elasticsearch:elasticsearch /etc/elasticsearch/
+Step 7
+
+Start the elasticsearch sevice
+sudo service elasticsearch start
+
+
+Note: In case the service fails to start, please ensure that the lines 36-38 in /etc/elasticsearch/jvm.options are as follows, else please edit as below and start the service:
+## GC configuration
+8-13:-XX:+UseConcMarkSweepGC
+8-13:-XX:CMSInitiatingOccupancyFraction=75
+8-13:-XX:+UseCMSInitiatingOccupancyOnly
+Step 8
+
+Check the nodes status. Wait for some time because the start command will take some time to start the Elastic Search
+curl -X GET "localhost:9200/_cat/nodes?pretty"
+Step 9
+
+Enable the shard allocation
+curl -X PUT "localhost:9200/_cluster/settings?pretty" -H 'Content-Type: application/json' -d '{
+    "persistent": {
+        "cluster.routing.allocation.enable": null
+    }
+}'
+Step 10
+
+Check the health (Wait for the status column to switch to green)
+curl -X GET "localhost:9200/_cat/health?v&pretty"
+Step 11
+
+Check the recovery Status
+curl -X GET "localhost:9200/_cat/recovery?pretty"
+Step 12
+
+Check the elasticsearch version in all the nodes
+curl -X GET "localhost:9200/_cat/nodes?h=ip,name,version&v&pretty"
+Step 13
+
+Check the shards
+curl -XGET "http://localhost:9200/_cat/shards?v"

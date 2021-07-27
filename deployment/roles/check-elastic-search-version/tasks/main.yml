@@ -1,0 +1,17 @@
+---
+
+- name: Check elastic search version
+  uri:
+    url: http://localhost:9200/_cat/nodes?h=ip,name,version&format=json
+    method: GET
+    status_code: 200
+    return_content: yes
+  register: result
+- name: Get installed version
+  set_fact: 
+    version: "{{ item.version }}"
+  with_items: "{{ result.json}}"
+  when: item.name in inventory_hostname
+- name: Verify installed version
+  fail: msg="Invalid version {{ version }} is not same as {{ es_version }}"
+  when: version != es_version

@@ -1,0 +1,18 @@
+---
+
+- name: Check shards status
+  uri:
+    url: http://localhost:9200/_cat/shards?format=json
+    method: GET
+    return_content: yes
+    status_code: 200
+  register: result
+  until: index is not defined
+  retries: 10
+  delay: 30
+- name: Get the index which is not started
+  set_fact: 
+    index: "{{ item.index }}"
+  with_items: "{{ result.json}}"
+  when: item.state != 'STARTED'
+

@@ -1,0 +1,6 @@
+---
+
+- name: Install specific version of ES
+  yum:
+    name: "elasticsearch-{{ es_version }}"
+    state: present

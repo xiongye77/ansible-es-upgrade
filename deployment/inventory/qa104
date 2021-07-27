@@ -1,0 +1,3 @@
+[elasticsearch-nodes]
+app4.qa104.acx elasticsearch_node_name='app4'
+

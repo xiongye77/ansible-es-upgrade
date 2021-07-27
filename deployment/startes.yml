@@ -1,0 +1,15 @@
+---
+# ansible-playbook upgrade-elastic-search.yml -i inventory/qa104
+
+- hosts: elasticsearch-nodes
+  serial: 1
+  become: yes
+  become_user: root
+  roles:
+    - { role: start-elastic-search-service }
+#    - { role: verify-node-status }
+    - { role: enable-shared-allocation }
+    - { role: check-health-status }
+    - { role: check-recovery-status }
+    - { role: check-elastic-search-version }
+    - { role: check-shards-status }

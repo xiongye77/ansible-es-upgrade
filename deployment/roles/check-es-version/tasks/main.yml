@@ -1,0 +1,14 @@
+- name: Get ES version
+  uri:
+    url: http://localhost:9200/
+    method: GET
+    return_content: yes
+    status_code: 200
+  register: result
+  until: result.json.version.number == "7.9.2"
+  retries: 10
+  delay: 30
+
+- name: Print ES result
+  debug:
+    var: result.json.version.number

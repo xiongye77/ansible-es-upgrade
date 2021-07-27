@@ -1,0 +1,8 @@
+- name: Verify node status
+  uri:
+    url: http://localhost:9200/_cat/nodes?format=json
+    method: GET
+    validate_certs: false 
+    use_proxy: false
+    status_code: 200
+

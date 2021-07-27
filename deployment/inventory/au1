@@ -1,0 +1,5 @@
+[elasticsearch-nodes]
+elasticsearch-node-1.syd.acx elasticsearch_node_name='elasticsearch-node-1'
+elasticsearch-node-2.syd.acx elasticsearch_node_name='elasticsearch-node-2'
+elasticsearch-node-3.syd.acx elasticsearch_node_name='elasticsearch-node-3'
+

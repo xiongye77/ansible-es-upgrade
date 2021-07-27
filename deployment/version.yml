@@ -1,0 +1,9 @@
+---
+# ansible-playbook upgrade-elastic-search.yml -i inventory/qa104
+
+- hosts: elasticsearch-nodes
+  serial: 1
+  become: yes
+  become_user: root
+  roles:
+    - { role: check-es-version }
