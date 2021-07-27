@@ -1,3 +1,6 @@
+ansible-playbook upgrade-elastic-search.yml -i inventory/au2
+
+
 ES Rolling Upgrade from 6.8.11 to 7.9.2
 
 We must upgrade from data node firstly one by one , after upgrade all data nodes, upgrade master nodes one by one.
